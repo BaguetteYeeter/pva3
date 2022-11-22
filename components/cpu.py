@@ -1,6 +1,3 @@
-from . import opcodes
-from . import bios
-
 class CPU:
     def __init__(self) -> None:
         self.name = "BDD Phantom 100"
@@ -12,7 +9,7 @@ class CPU:
         B = 0 # Base
         C = 0 # Counter
         D = 0 # Data
-    def tick(self, bios: bios.BIOS):
+    def tick(self, bios, opcodes):
         data = ord(bios.ram.fetch(self.Registers.CurrentInstruction, 1))
         self.Registers.CurrentInstruction += 1
         try:
