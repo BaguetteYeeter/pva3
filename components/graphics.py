@@ -13,6 +13,24 @@ class VideoController:
         self.pointer = (0, 0)
         self.screen_w = 80
         self.screen_h = 30
+        self.colormap = [
+            (0, 0, 0),
+            (170, 170, 170),
+            (170, 0, 0),
+            (0, 170, 0),
+            (0, 0, 170),
+            (170, 170, 0),
+            (170, 0, 170),
+            (0, 170, 170),
+            (0, 0, 0),
+            (255, 255, 255),
+            (255, 0, 0),
+            (0, 255, 0),
+            (0, 0, 255),
+            (255, 255, 0),
+            (255, 0, 255),
+            (0, 255, 255)
+        ]
         for i in range(self.screen_h):
             tmp_list = []
             for j in range(self.screen_w):
@@ -67,6 +85,25 @@ class VideoController:
                     continue
         self.pointer = (self.pointer[0], 0)
         self.update()
+    def call(self, bios, address):
+        instruction = ord(bios.ram.fetch(address, 1))
+        address += 1
+        if instruction == 0x10:
+            char = bios.ram.fetch(address, 1)
+            self.print(char)
+        if instruction == 0x11:
+            char = bios.ram.fetch(address, 1)
+            colors = bios.ram.fetch(address+1, 2)
+            foreground = self.colormap[ord(colors[0])]
+            background = self.colormap[ord(colors[1])]
+            self.print(char, foreground, background)
+        if instruction == 0x03:
+            color = self.colormap[bios.ram.fetch(address, 1)]
+            self.foreground = color
+        if instruction == 0x04:
+            color = self.colormap[bios.ram.fetch(address, 1)]
+            self.background = color
+
 
 def video_test():
     video = VideoController()

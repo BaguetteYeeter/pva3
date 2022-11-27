@@ -17,3 +17,5 @@ class CPU:
         except Exception:
             instruction = opcodes.nop
         instruction(bios)
+    def call(self, bios, message):
+        pass
